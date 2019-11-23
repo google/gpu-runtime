@@ -1,53 +1,38 @@
-# New Project Template
+# Simple GPU runtime support library based on driver API 
 
-This repository contains a template you can use to seed a repository for a
-new open source project.
+This library allows running CUDA applications using only the driver API
+(https://docs.nvidia.com/cuda/archive/9.0/cuda-driver-api/index.html).  It's
+functional enough to run simple CUDA applications, but is not tested beyond
+that.
 
-See go/releasing (available externally at
-https://opensource.google/docs/releasing/) for more information about
-releasing a new Google open source project.
+**NOTE**: Google is not planning to make any further changes to this library. It's a
+proof-of-concept implementation released in hope that it will be useful on
+platforms where the CUDA runtime library is not available.
 
-This template uses the Apache license, as is Google's default.  See the
-documentation for instructions on using alternate license.
+## Limitations
 
-## How to use this template
+This library only works for CUDA code compiled with CUDA-9.0 or older. More
+recent CUDA versions use slightly different API to set up and launch kernels and
+will need to implement a handful of additional functions.
 
-1. Check it out from GitHub.
-    * There is no reason to fork it.
-1. Create a new local repository and copy the files from this repo into it.
-1. Modify README.md and CONTRIBUTING.md to represent your project, not the
-   template project.
-1. Develop your new project!
+The library has only been tested on Linux.
 
-``` shell
-git clone https://github.com/google/new-project
-mkdir my-new-thing
-cd my-new-thing
-git init
-cp -r ../new-project/* .
-git add *
-git commit -a -m 'Boilerplate for new Google open source project'
+## Building
+
+Prerequisites: clang-7.0.0 or newer. 
+
+```shell
+$ # git clone <...>/gpu-runtime.git
+$ cd gpu-runtime
+$ git submodule update --init --recursive
+$ mkdir build
+$ cd build
+$ cmake cmake -DCUDA_ROOT=/path/to/cuda-9.0 -DCMAKE_CXX_COMPILER=/path/to/recent/clang++ ../
+$ make -j 8
+$ make test
 ```
 
-## Source Code Headers
+## Using
 
-Every file containing source code must include copyright and license
-information. This includes any JS/CSS files that you might be serving out to
-browsers. (This is to help well-intentioned people avoid accidental copying that
-doesn't comply with the license.)
+Link your application with `gpu-runtime.o` instead of `-lcudart`.
 
-Apache header:
-
-    Copyright 2019 Google LLC
-
-    Licensed under the Apache License, Version 2.0 (the "License");
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
-
-        https://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.

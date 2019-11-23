@@ -1,0 +1,6 @@
+[submodule "lib/abseil-cpp"]
+	path = lib/abseil-cpp
+	url = https://github.com/abseil/abseil-cpp.git
+[submodule "lib/googletest"]
+	path = lib/googletest
+	url = https://github.com/google/googletest.git
